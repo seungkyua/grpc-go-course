@@ -1,4 +1,4 @@
-package main
+package calculator_server
 
 import (
 	"context"
@@ -17,9 +17,9 @@ import (
 	"google.golang.org/grpc"
 )
 
-type server struct{}
+type Server struct{}
 
-func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculatorpb.SumResponse, error) {
+func (*Server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculatorpb.SumResponse, error) {
 	fmt.Printf("Received Sum RPC: %v\n", req)
 	firstNumber := req.FirstNumber
 	secondNumber := req.SecondNumber
@@ -30,7 +30,7 @@ func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculat
 	return res, nil
 }
 
-func (*server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
+func (*Server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
 	fmt.Printf("Received PrimeNumberDecomposition RPC: %v\n", req)
 
 	number := req.GetNumber()
@@ -50,7 +50,7 @@ func (*server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositi
 	return nil
 }
 
-func (*server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAverageServer) error {
+func (*Server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAverageServer) error {
 	fmt.Printf("Received ComputeAverage RPC\n")
 
 	sum := int32(0)
@@ -73,7 +73,7 @@ func (*server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAvera
 
 }
 
-func (*server) FindMaximum(stream calculatorpb.CalculatorService_FindMaximumServer) error {
+func (*Server) FindMaximum(stream calculatorpb.CalculatorService_FindMaximumServer) error {
 	fmt.Println("Received FindMaximum RPC")
 	maximum := int32(0)
 
@@ -100,7 +100,7 @@ func (*server) FindMaximum(stream calculatorpb.CalculatorService_FindMaximumServ
 	}
 }
 
-func (*server) SquareRoot(ctx context.Context, req *calculatorpb.SquareRootRequest) (*calculatorpb.SquareRootResponse, error) {
+func (*Server) SquareRoot(ctx context.Context, req *calculatorpb.SquareRootRequest) (*calculatorpb.SquareRootResponse, error) {
 	fmt.Println("Received SquareRoot RPC")
 	number := req.GetNumber()
 	if number < 0 {
@@ -123,7 +123,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	calculatorpb.RegisterCalculatorServiceServer(s, &server{})
+	calculatorpb.RegisterCalculatorServiceServer(s, &Server{})
 
 	// Register reflection service on gRPC server.
 	reflection.Register(s)

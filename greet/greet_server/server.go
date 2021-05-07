@@ -13,6 +13,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
+	cal "github.com/simplesteph/grpc-go-course/calculator/calculator_server"
+	"github.com/simplesteph/grpc-go-course/calculator/calculatorpb"
 	"github.com/simplesteph/grpc-go-course/greet/greetpb"
 
 	"google.golang.org/grpc"
@@ -131,6 +133,7 @@ func main() {
 
 	s := grpc.NewServer(opts...)
 	greetpb.RegisterGreetServiceServer(s, &server{})
+	calculatorpb.RegisterCalculatorServiceServer(s, &cal.Server{})
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
